@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layout/layout}"
+>
+  <th:block layout:fragment="content">
+    <h1 th:if="${app.id == null}">New App</h1>
+    <h1 th:if="${app.id != null}">Edit App</h1>
+    <hr />
+    <form
+      th:action="@{/apps}"
+      th:method="@{${app.id == null} ? 'post' : 'put'}"
+      th:object="${app}"
+    >
+      <input type="hidden" th:field="*{id}" />
+
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input
+          id="name"
+          name="name"
+          type="text"
+          class="form-control"
+          th:field="*{name}"
+          style ='height: 200px; width: max-content;'
+        />
+      </div>
+      <div class="form-group">
+        <label for="description">Description</label>
+        <input
+          id="description"
+          name="description"
+          type="text"
+          class="form-control"
+          th:field="*{description}"
+          style ='height: 200px; width: max-content;'
+        />
+      </div>
+      <div class="form-group">
+        <label for="image_file-lg">Image</label>
+        <input
+          id="image_file"
+          name="image_file"
+          type="file"
+          class="form-control-lg"
+        />
+        <!-- 画像があれば縮小して表示 -->
+        <img
+          th:if="${app.image != null && app.image != ''}"
+          th:src="*{image}"
+          th:alt="現在の画像"
+          width="200"
+          height="200"
+        />
+        <input id="image" name="image" type="hidden" th:field="*{image}" />
+      </div>
+      <div class="form-group">
+        <label for="developer">Developer</label>
+        <input
+          id="developer"
+          name="developer"
+          type="text"
+          class="form-control"
+          th:field="*{developer}"
+          style ='height: 200px; width: max-content;'
+        />
+      </div>
+      <div class="form-check">
+        <input
+          id="active"
+          name="active"
+          type="checkbox"
+          class="form-check-input"
+          th:field="*{active}"
+        />
+        <label for="active" class="form-check-label">Active</label>
+      </div>
+
+      <button type="submit" class="btn btn-success">Save</button>
+      <a th:href="@{/apps}" class="btn btn-default">Back</a>
+    </form>
+    <script>
+      window.addEventListener('load', function () {
+        const imageFile = document.getElementById('image_file');
+        const image = document.getElementById('image');
+        imageFile.addEventListener('change', function () {
+          const file = imageFile.files[0];
+          const reader = new FileReader();
+          reader.addEventListener('load', function () {
+            image.value = reader.result;
+            const imagePreview = document.createElement('img');
+            imagePreview.id = 'image_preview';
+            imagePreview.src = reader.result;
+            imagePreview.style = "max-width: 200px; max-height: 200px;"
+
+            imageFile.after(imagePreview);
+          });
+          reader.readAsDataURL(file);
+        });
+      });
+    </script>
+    <link th:href="@{/css/app.css}" type="text/css" rel="stylesheet" />
+  </th:block>
+</html>

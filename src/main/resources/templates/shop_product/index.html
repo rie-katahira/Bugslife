@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layout/layout}"
+>
+  <th:block layout:fragment="content">
+    <h1>商品一覧</h1>
+    <hr />
+    <a th:href="@{/shops/{shopId}/products/new(shopId = ${shopId})}">新規作成</a
+    ><br /><br />
+
+    <div class="container border py-2 mb-4">
+      <form
+        class="row"
+        th:action="@{/shops/{shopId}/products(shopId = ${shopId})}"
+        th:method="'get'"
+        th:object="${request}"
+      >
+        <div class="form-group col-6 mb-2">
+          <label for="name">名前:</label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            class="form-control"
+            th:field="*{name}"
+          />
+        </div>
+        <div class="form-group col-6 mb-2">
+          <label for="code">コード:</label>
+          <input
+            type="text"
+            id="code"
+            name="code"
+            class="form-control"
+            th:field="*{code}"
+          />
+        </div>
+        <div class="form-group col-12 mb-2">
+          <label for="category">カテゴリー:</label>
+          <div>
+            <div
+              class="form-check form-check-inline"
+              th:each="category: ${categories}"
+            >
+              <input
+                class="form-check-input"
+                type="checkbox"
+                name="categories"
+                th:value="${category.id}"
+                th:id="'category' + ${category.id}"
+                th:checked="${request.categories != null and #lists.contains(request.categories, category.id)}"
+              />
+              <label
+                class="form-check-label"
+                th:for="'category' + ${category.id}"
+                th:text="${category.name}"
+              ></label>
+            </div>
+          </div>
+        </div>
+        <div class="form-group col-12 mb-2">
+          <label for="">重さ:</label>
+          <div class="input-group">
+            <input
+              type="number"
+              class="form-control"
+              name="weight1"
+              th:field="*{weight1}"
+            />
+            <span class="input-group-text">〜</span>
+            <input
+              type="number"
+              class="form-control"
+              name="weight2"
+              th:field="*{weight2}"
+            />
+          </div>
+        </div>
+        <div class="form-group col-12 mb-2">
+          <label for="">高さ:</label>
+          <div class="input-group">
+            <input
+              type="number"
+              class="form-control"
+              name="height1"
+              th:field="*{height1}"
+            />
+            <span class="input-group-text">〜</span>
+            <input
+              type="number"
+              class="form-control"
+              name="height2"
+              th:field="*{height2}"
+            />
+          </div>
+        </div>
+        <div class="form-group col-12 mb-2">
+          <label for="">値段:</label>
+          <div class="input-group">
+            <input
+              type="number"
+              step="0.01"
+              class="form-control"
+              name="price1"
+              th:field="*{price1}"
+            />
+            <span class="input-group-text">〜</span>
+            <input
+              type="number"
+              step="0.01"
+              class="form-control"
+              name="price2"
+              th:field="*{price2}"
+            />
+          </div>
+        </div>
+        <div class="text-end">
+          <input type="reset" value="Reset" class="btn btn-outline-secondary" />
+          <button type="submit" class="btn btn-primary">検索</button>
+        </div>
+      </form>
+    </div>
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th>名前</th>
+          <th>コード</th>
+          <th>カテゴリー</th>
+          <th>重さ</th>
+          <th>高さ</th>
+          <th>値段</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="product : ${listProduct}">
+          <td th:text="${product.name}"></td>
+          <td th:text="${product.code}"></td>
+          <td>
+            <span
+              class="badge text-bg-info"
+              th:text="${product.categoryName}"
+            ></span>
+          </td>
+          <td th:text="${product.weight}"></td>
+          <td th:text="${product.height}"></td>
+          <td th:text="${product.price}"></td>
+          <td>
+            <a
+              class="btn btn-primary"
+              th:href="@{/shops/{shopId}/products/{id}(shopId = ${shopId}, id = ${product.id})}"
+              >詳細</a
+            >
+            <a
+              class="btn btn-secondary"
+              th:href="@{/shops/{shopId}/products/{id}/edit(shopId = ${shopId}, id = ${product.id})}"
+              >編集</a
+            >
+            <form
+              class="d-inline"
+              th:action="@{/shops/{shopId}/products/{id}(shopId = ${shopId}, id = ${product.id})}"
+              th:method="delete"
+            >
+              <button class="btn btn-danger" type="submit">削除</button>
+            </form>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </th:block>
+</html>

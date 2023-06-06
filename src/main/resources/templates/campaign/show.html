@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layout/layout}"
+>
+  <th:block layout:fragment="content">
+    <h1>Show Campaign</h1>
+    <hr />
+    <div class="form-group">
+      <label for="name">Name: </label>
+      <span th:text="${campaign.name}"></span>
+    </div>
+    <div class="form-group">
+      <label for="code">Code: </label>
+      <span th:text="${campaign.code}"></span>
+    </div>
+    <div class="form-group">
+      <label for="discountType">DiscountType: </label>
+      <span th:text="${campaign.discountType.getName()}"></span>
+    </div>
+    <div class="form-group">
+      <label for="fromDate">FromDate: </label>
+      <span th:text="${campaign.fromDate}"></span>
+    </div>
+    <div class="form-group">
+      <label for="toDate">ToDate: </label>
+      <span th:text="${campaign.toDate}"></span>
+    </div>
+    <div class="form-group">
+      <label for="status">Status: </label>
+      <span th:text="${campaign.status.getName()}"></span>
+    </div>
+    <div class="form-group">
+      <label for="description">Description: </label>
+      <span th:text="${campaign.description}"></span>
+    </div>
+
+    <a
+      class="btn btn-link"
+      th:href="@{/campaigns/{id}/edit(id = ${campaign.id})}"
+      >Edit this record</a
+    >
+    <br />
+    <form
+      th:action="@{/campaigns/{id}(id = ${campaign.id})}"
+      th:method="delete"
+    >
+      <button class="btn btn-link" type="submit">Delete this record</button>
+    </form>
+    <a class="btn btn-link" th:href="@{/campaigns}"
+      >Back to list All campaigns</a
+    >
+    <br />
+  </th:block>
+</html>

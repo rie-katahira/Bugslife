@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layout/layout}"
+>
+  <th:block layout:fragment="content">
+    <th:block th:replace="~{layout/alert :: login}"></th:block>
+    <div class="login-container">
+      <div class="d-flex align-items-center justify-content-center h-100">
+        <div class="container">
+          <div class="card card-container">
+            <img
+              id="profile-img"
+              class="profile-img-card"
+              src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
+            />
+            <form class="form-signin" th:action="@{/auth/login}" method="post">
+              <span id="reauth-email" class="reauth-email"></span>
+              <input
+                type="text"
+                name="username"
+                value="user"
+                class="form-control"
+                placeholder="メールアドレス"
+                required
+                autofocus
+              />
+              <input
+                type="password"
+                name="password"
+                class="form-control"
+                placeholder="パスワード"
+                required
+                value="password"
+              />
+              <button
+                class="btn btn-lg btn-primary btn-block btn-signin"
+                type="submit"
+              >
+                ログイン
+              </button>
+            </form>
+            <!-- /form -->
+            <span class="forgot-password">
+              ※パスワードを忘れた場合はシステム管理者に問い合わせてください
+            </span>
+          </div>
+          <!-- /card-container -->
+        </div>
+        <!-- /container -->
+      </div>
+      <!-- /login-container -->
+    </div>
+    <link th:href="@{/css/login.css}" type="text/css" rel="stylesheet" />
+  </th:block>
+</html>

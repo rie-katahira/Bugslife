@@ -1,0 +1,19 @@
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+>
+  <th:block th:fragment="header">
+    <nav class="navbar bg-body-tertiary">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="/"><strong> Template </strong></a>
+        <form
+          th:action="@{/auth/logout}"
+          method="post"
+          sec:authorize="isAuthenticated()"
+        >
+          <input class="btn btn-default" type="submit" value="ログアウト" />
+        </form>
+      </div>
+    </nav>
+  </th:block>
+</html>

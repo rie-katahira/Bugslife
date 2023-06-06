@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layout/layout}"
+>
+  <th:block layout:fragment="content">
+    <div id="success-message" class="alert alert-success" role="alert" style="display: none; position:absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);"></div>
+    <div id="error-message" class="alert alert-danger" role="alert"  style="display: none; position:absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);"></div>
+    <h1>カテゴリー - 商品設定</h1>
+    <hr />
+    <div id="categoryId" data-th-var="category.id" data-th-val="${category.id}"></div>
+    <div id="action" data-th-var="action" data-th-val="${action}"></div>
+    <div class="form-group">
+      <label for="name">カテゴリー名: </label>
+      <span th:text="${category.name}"></span>
+    </div>
+    <div class="form-group">
+      <label for="description">説明: </label>
+      <span th:text="${category.description}"></span>
+    </div>
+    <hr />
+    <div class="form-group">
+      <label for="products">紐付商品一覧: </label>
+      <div class="d-inline" th:each="product : ${products}">
+        <input class="form-check-input" type="checkbox" th:id="'checkbox-' + ${product.id}" th:value="${product.id}" />
+        <label class="form-check-label" th:for="'checkbox-' + ${product.id}" th:text="${product.name}"></label>
+      </div>
+    </div>
+    <button id="update-button" class="btn btn-primary">紐付更新</button>
+
+    <a class="btn btn-secondary" th:href="@{/categories}"
+      >カテゴリー一覧</a
+    >
+    <br />
+  </th:block>
+</html>
+<script src="/js/category/category-product.js"></script>

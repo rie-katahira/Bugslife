@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layout/layout}"
+>
+  <th:block layout:fragment="content">
+    <h1>受注一覧</h1>
+    <hr />
+    <a th:href="@{/orders/new}">新規作成</a><br /><br />
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th>顧客ID</th>
+          <th>商品 / 個数</th>
+          <th>値引き</th>
+          <th>配送料</th>
+          <th>税額</th>
+          <th>小計</th>
+          <th>総合計</th>
+          <th>状態</th>
+          <th>支払い方法</th>
+          <th>支払い状態</th>
+          <th>支払い済み額</th>
+          <th>メモ</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="order : ${listOrder}">
+          <td th:text="${order.customerId}"></td>
+          <td>
+            <th:block th:each="orderProduct : ${order.orderProducts}">
+              <div>
+                <span th:text="${orderProduct.name}"></span> /
+                <span th:text="${orderProduct.quantity}"></span>
+              </div>
+            </th:block>
+          </td>
+          <td th:text="${order.discount}"></td>
+          <td th:text="${order.shipping}"></td>
+          <td th:text="${order.tax}"></td>
+          <td th:text="${order.total}"></td>
+          <td th:text="${order.grandTotal}"></td>
+          <td th:text="${order.getStatusName()}"></td>
+          <td th:text="${order.getPaymentMethodName()}"></td>
+          <td th:text="${order.getPaymentStatusName()}"></td>
+          <td th:text="${order.paid}"></td>
+          <td th:text="${order.note}"></td>
+          <td>
+            <a
+              class="btn btn-primary"
+              th:href="@{/orders/{id}(id = ${order.id})}"
+              >詳細</a
+            >
+            <a
+              class="btn btn-secondary"
+              th:href="@{/orders/{id}/edit(id = ${order.id})}"
+              >編集</a
+            >
+            <form
+              class="d-inline"
+              th:action="@{/orders/{id}(id = ${order.id})}"
+              th:method="delete"
+            >
+              <button class="btn btn-danger" type="submit">削除</button>
+            </form>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </th:block>
+</html>

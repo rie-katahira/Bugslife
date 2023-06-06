@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CSRF security checker</title>
+  </head>
+  <body>
+    <h1>1. CSRF対策が正常にされているか確認</h1>
+    <h5>ログイン状態でもユーザーが作成されないこと確認してください。</h5>
+    <form action="http://localhost:8080/users" method="post">
+      <input type="hidden" name="id" />
+      <input type="text" name="name" value="###DANGER###" />
+      <input type="email" name="email" value="danger@example.com" />
+      <input
+        type="password"
+        name="password"
+        value="danger"
+        autocomplete="current-password"
+      />
+      <input type="hidden" name="_csrf" value="###DANGER###" />
+      <input type="submit" value="Submit" />
+    </form>
+    <h1>2. CSRFトークンによる動作を確認</h1>
+    <h5>
+      元のページのヘッダーにある
+      contentの中身がセッションごとに変わることを確認してください。
+    </h5>
+    <code>
+      <pre>
+&lt;meta name="_csrf" content="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" /&gt;
+    </pre
+      >
+    </code>
+    <h1 style="color: red">
+      3. CSRFトークンがないと外部からは動作できないことを確認
+    </h1>
+    <h5>
+      元のページのヘッダーにある
+      CSRFトークンに入れることで、不正に登録ができることを確認してください。
+    </h5>
+    <form action="http://localhost:8080/users" method="post">
+      <input type="hidden" name="id" />
+      <input type="text" name="name" value="###DANGER###" />
+      <input type="email" name="email" value="danger@example.com" />
+      <input
+        type="password"
+        name="password"
+        value="danger"
+        autocomplete="current-password"
+      />
+      <input type="text" name="_csrf" placeholder="CSRFトークン" />
+      <input type="submit" value="Submit" />
+    </form>
+  </body>
+</html>

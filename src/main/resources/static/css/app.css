@@ -1,0 +1,63 @@
+/* 一覧 */
+.app-table {
+  table-layout: fixed;
+}
+
+.text-overflow {
+  white-space: nowrap;
+}
+
+/* 詳細 */
+span.font-impact {
+  font-family: "Impact";
+  font-size: small;
+}
+
+a.btn {
+  font-weight: 700;
+  height: 36px;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+  cursor: default;
+}
+
+a.btn-link {
+  font-weight: 700;
+  height: 36px;
+}
+
+/* PC */
+.app-show-container {
+  width: 100%;
+}
+
+/* タブレット */
+@media (max-width: 768px) { 
+  /* 一覧 */
+  .for-tablet {
+    display: none;
+  }
+  .app-show-container {
+    width: 1500px;
+    height: 3000px;
+  }
+  span.font-impact {
+    font-size: x-large;
+  }
+}
+
+/* スマホ */
+@media (max-device-width: 500px) {
+  /* 一覧 */
+  .for-pc.for-tablet {
+    display: none;
+  }
+  
+  .app-show-container {
+    width: 1500px;
+  }
+  span.font-impact {
+    font-size: xx-large;
+  }
+}

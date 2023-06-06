@@ -1,0 +1,43 @@
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+>
+  <!-- 共通 -->
+  <th:block th:fragment="base">
+    <div th:if="${success != null}" class="alert alert-success" role="alert">
+      <span th:text="${success}">msg success</span>
+    </div>
+    <div th:if="${error != null}" class="alert alert-danger" role="alert">
+      <span th:utext="${error}">msg error</span>
+    </div>
+  </th:block>
+  <!-- ログインページ -->
+  <th:block th:fragment="login">
+    <div
+      th:if="${param.error}"
+      class="alert alert-danger alert-dismissible fade show"
+      role="alert"
+    >
+      <strong>ユーザー名かパスワードが間違っています</strong>
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="alert"
+        aria-label="Close"
+      ></button>
+    </div>
+    <div
+      th:if="${param.logout}"
+      class="alert alert-success alert-dismissible fade show"
+      role="alert"
+    >
+      ログアウトしました
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="alert"
+        aria-label="Close"
+      ></button>
+    </div>
+  </th:block>
+</html>

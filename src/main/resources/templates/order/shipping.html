@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layout/layout}"
+>
+  <th:block layout:fragment="content">
+    <h1>受注 一括発送</h1>
+    <hr />
+    <a th:href="@{/orders}" class="btn btn-default">Back</a><br /><br />
+
+    <div class="mb-4">
+      <div class="row">
+        <!-- CSVの読み込み -->
+        <form
+          class="row col-6"
+          th:action="@{/orders/shipping}"
+          method="post"
+          enctype="multipart/form-data"
+        >
+          <div class="input-group">
+            <input
+              class="form-control"
+              type="file"
+              id="file"
+              name="file"
+              accept=".csv"
+            />
+            <button type="submit" class="btn btn-primary">読込</button>
+          </div>
+        </form>
+        <!-- テンプレートCSVのダウンロード -->
+        <form
+          th:method="post"
+          th:action="@{/orders/shipping/download}"
+          enctype="multipart/form-data"
+          class="col-4"
+        >
+          <input
+            type="submit"
+            value="テンプレートをダウンロード"
+            class="btn btn-warning"
+          />
+        </form>
+      </div>
+    </div>
+
+    <!-- CSVの各行のバリデーションチェック後のエラーを表示する -->
+    <div th:if="${validationError}" th:each="error : ${validationError}">
+      <label class="text-danger" th:text="${error}"></label>
+    </div>
+
+    <!-- CSVの読み込み内容を表示する -->
+    <div th:if="${orderShippingData}">
+      <!-- チェックを入れたデータのみ出荷済みに更新する -->
+      <form
+        th:action="@{/orders/shipping}"
+        th:method="'put'"
+        th:object="${orderShippingData}"
+      >
+        <button type="submit" class="btn btn-success">出荷情報更新</button>
+        <table class="table">
+          <thead>
+            <tr>
+              <th><input type="checkbox" id="all_check" /></th>
+              <th>受注ID</th>
+              <th>出荷コード</th>
+              <th>出荷日</th>
+              <th>配達日</th>
+              <th>配達時間帯</th>
+              <th>ステータス</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="orderShipping, st : *{orderShippingList}">
+              <td>
+                <input
+                  class="row_check"
+                  type="checkbox"
+                  th:field="*{orderShippingList[__${st.index}__].checked}"
+                />
+              </td>
+              <td>
+                <th:block th:text="${orderShipping.orderId}"></th:block>
+                <input
+                  type="hidden"
+                  th:field="*{orderShippingList[__${st.index}__].orderId}"
+                />
+              </td>
+              <td>
+                <th:block th:text="${orderShipping.shippingCode}"></th:block>
+                <input
+                  type="hidden"
+                  th:field="*{orderShippingList[__${st.index}__].shippingCode}"
+                />
+              </td>
+              <td>
+                <th:block th:text="${orderShipping.shippingDate}"></th:block>
+                <input
+                  type="hidden"
+                  th:field="*{orderShippingList[__${st.index}__].shippingDate}"
+                />
+              </td>
+              <td>
+                <th:block th:text="${orderShipping.deliveryDate}"></th:block>
+                <input
+                  type="hidden"
+                  th:field="*{orderShippingList[__${st.index}__].deliveryDate}"
+                />
+              </td>
+              <td>
+                <th:block
+                  th:text="${orderShipping.deliveryTimezone}"
+                ></th:block>
+                <input
+                  type="hidden"
+                  th:field="*{orderShippingList[__${st.index}__].deliveryTimezone}"
+                />
+              </td>
+              <td>
+                <span
+                  class="badge text-bg-danger"
+                  th:if="${orderShipping.uploadStatus == 'error'}"
+                  >エラー</span
+                >
+                <span
+                  class="badge text-bg-success"
+                  th:if="${orderShipping.uploadStatus == 'success'}"
+                  >成功</span
+                >
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </form>
+    </div>
+  </th:block>
+</html>
+<script src="/js/order/order-shipping.js"></script>

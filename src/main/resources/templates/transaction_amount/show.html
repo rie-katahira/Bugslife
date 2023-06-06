@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layout/layout}"
+>
+  <th:block layout:fragment="content">
+    <h1>取引金額 詳細</h1>
+    <hr />
+    <div class="form-group">
+      <label for="plusMinus">収入/支出: </label>
+      <span th:text="${tAmount.plusMinus ? '収入' : '支出'}"></span>
+    </div>
+    <div class="form-group">
+      <label for="price">金額: </label>
+      <span th:text="${tAmount.price}"></span>
+    </div>
+    <div class="form-group">
+      <label for="dueDate">期限日: </label>
+      <span th:text="${#dates.format(tAmount.dueDate, 'yyyy-MM-dd')}"></span>
+    </div>
+    <div class="form-group">
+      <label for="hasPaid">対応済: </label>
+      <span
+        th:text="${tAmount.hasPaid ? tAmount.plusMinus ? '入金済' : '支払済' : tAmount.plusMinus ? '未納' : '未払'}"
+      ></span>
+    </div>
+    <div class="form-group">
+      <label for="memo">メモ: </label>
+      <span th:text="${tAmount.memo}"></span>
+    </div>
+
+    <a
+      class="btn btn-secondary"
+      th:href="@{/transactionAmounts/{id}/edit(id = ${tAmount.id})}"
+      >編集</a
+    >
+    <br />
+    <form
+      th:action="@{/transactionAmounts/{id}(id = ${tAmount.id})}"
+      th:method="delete"
+    >
+      <button class="btn btn-danger" type="submit">削除</button>
+    </form>
+    <a
+      class="btn btn-default"
+      th:href="@{/companies/{cId}(cId = ${tAmount.companyId})}"
+      >取引先詳細に戻る</a
+    >
+    <br />
+  </th:block>
+</html>

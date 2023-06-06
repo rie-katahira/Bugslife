@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layout/layout}"
+>
+  <th:block layout:fragment="content">
+    <h1 th:if="${campaign.id == null}">New Campaign</h1>
+    <h1 th:if="${campaign.id != null}">Edit Campaign</h1>
+    <hr />
+    <form
+      th:action="@{/campaigns}"
+      th:method="@{${campaign.id == null} ? 'post' : 'put'}"
+      th:object="${campaign}"
+    >
+      <input type="hidden" th:field="*{id}" />
+
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input
+          id="name"
+          name="name"
+          type="text"
+          class="form-control"
+          th:field="*{name}"
+          th:errorclass="is-invalid"
+        />
+        <div class="invalid-feedback" th:errors="*{name}"></div>
+      </div>
+      <div class="form-group">
+        <label for="code">Code</label>
+        <input
+          id="code"
+          name="code"
+          type="text"
+          class="form-control"
+          th:field="*{code}"
+          th:errorclass="is-invalid"
+        />
+        <div class="invalid-feedback" th:errors="*{code}"></div>
+      </div>
+      <div class="form-group">
+        <label for="discountType">DiscountType</label>
+        <select id="discountType" name="discountType" th:field="*{discountType}" class="form-select">
+          <option 
+            th:each="type : ${typeList}"
+            th:value="${type}"
+            th:selected="${discountType == type.id}"
+            th:inline="text"
+          >
+            [[${type.name}]]
+          </option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="fromDate">FromDate</label>
+        <input
+          id="fromDate"
+          name="fromDate"
+          type="date"
+          class="form-control"
+          th:field="*{fromDate}"
+        />
+      </div>
+      <div class="form-group">
+        <label for="toDate">ToDate</label>
+        <input
+          id="toDate"
+          name="toDate"
+          type="date"
+          class="form-control"
+          th:field="*{toDate}"
+        />
+      </div>
+      <div class="form-group">
+        <label for="status">Status</label>
+        <select id="status" name="status" th:field="*{status}" class="form-select">
+          <option 
+            th:each="sts : ${statusList}"
+            th:value="${sts}"
+            th:selected="${status == sts.id}"
+            th:inline="text"
+          >
+            [[${sts.name}]]
+          </option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="description">Description</label>
+        <textarea
+          id="description"
+          name="description"
+          class="form-control"
+          th:field="*{description}"
+        ></textarea>
+      </div>
+      <br />
+
+      <button type="submit" class="btn btn-success">Save</button>
+      <a th:href="@{/campaigns}" class="btn btn-default">Back</a>
+    </form>
+  </th:block>
+</html>

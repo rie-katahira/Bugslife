@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layout/layout}"
+>
+  <th:block layout:fragment="content">
+    <h1>List App</h1>
+    <hr />
+    <a th:href="@{/apps/new}">New App</a><br /><br />
+
+    <table class="table app-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Url</th>
+          <th class="for-tablet">Description</th>
+          <th>Image</th>
+          <th class="for-tablet">Developer</th>
+          <th>Action</th>
+          <th>Active</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="app : ${listApp}">
+          <td th:text="${app.name}"></td>
+          <td class="text-overflow">
+            <a th:href="${app.url}" target="_blank" th:text="${app.url}"></a>
+          </td>
+          <td class="for-tablet text-overflow" th:text="${app.description}"></td>
+          <td>
+            <!-- 画像があれば縮小して表示 -->
+            <img
+              th:if="${app.image != null && app.image != ''}"
+              th:src="${app.image}"
+              th:alt="現在の画像"
+              style="max-width: 100px; max-height: 100px"
+            />
+          </td>
+          <td class="for-tablet" th:text="${app.developer}"></td>
+          <td>
+            <a class="btn btn-primary" th:href="@{/apps/{id}(id = ${app.id})}"
+            >Show</a
+            >
+            <a
+              class="btn btn-secondary"
+              th:href="@{/apps/{id}/edit(id = ${app.id})}"
+            >Edit</a
+            >
+          </td>
+          <td th:text="${app.active}"></td>
+        </tr>
+      </tbody>
+    </table>
+    <link th:href="@{/css/app.css}" type="text/css" rel="stylesheet" />
+  </th:block>
+</html>

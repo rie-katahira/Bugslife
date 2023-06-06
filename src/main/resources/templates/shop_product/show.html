@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layout/layout}"
+>
+  <th:block layout:fragment="content">
+    <h1>商品詳細</h1>
+    <hr />
+    <div class="form-group">
+      <label for="name">名前: </label>
+      <span th:text="${product.name}"></span>
+    </div>
+    <div class="form-group">
+      <label for="code">コード: </label>
+      <span th:text="${product.code}"></span>
+    </div>
+    <div class="form-group">
+      <label for="categories">カテゴリー: </label>
+      <th:block th:each="categoryProduct: ${product.categoryProducts}">
+        <span
+          th:if="${category.id == categoryProduct.categoryId}"
+          th:each="category: ${categories}"
+          class="badge text-bg-info"
+          th:text="${category.name}"
+        ></span>
+      </th:block>
+    </div>
+    <div class="form-group">
+      <label for="weight">重さ: </label>
+      <span th:text="${product.weight}"></span>
+    </div>
+    <div class="form-group">
+      <label for="height">高さ: </label>
+      <span th:text="${product.height}"></span>
+    </div>
+    <div class="form-group">
+      <label for="price">値段: </label>
+      <span th:text="${product.price}"></span>
+    </div>
+    <div class="form-group">
+      <label for="rate">税率: </label>
+      <span th:if="${tax.rate == 10}">通常税率（10%）</span>
+      <span th:if="${tax.rate == 8}">軽減税率（8%）</span>
+      <span th:if="${tax.rate == 0}">非課税（0%）</span>
+    </div>
+    <div class="form-group">
+      <label for="taxIncluded">入力価格: </label>
+      <span th:if="${tax.taxIncluded == true}">税込価格</span>
+      <span th:if="${tax.taxIncluded == false}">税抜き価格</span>
+    </div>
+    <div class="form-group">
+      <label for="rounding">端数処理: </label>
+      <span th:if="${tax.rounding == 'floor'}">切り捨て</span>
+      <span th:if="${tax.rounding == 'round'}">四捨五入</span>
+      <span th:if="${tax.rounding == 'ceil'}">切り上げ</span>
+    </div>
+
+    <a
+      class="btn btn-link"
+      th:href="@{/shops/{shopId}/products/{id}/edit(shopId = ${shopId}, id = ${product.id})}"
+      >編集</a
+    >
+    <br />
+    <form
+      th:action="@{/shops/{shopId}/products/{id}(shopId = ${shopId}, id = ${product.id})}"
+      th:method="delete"
+    >
+      <button class="btn btn-link" type="submit">削除</button>
+    </form>
+    <a
+      class="btn btn-link"
+      th:href="@{/shops/{shopId}/products(shopId = ${shopId})}"
+      >一覧へ戻る</a
+    >
+    <br />
+  </th:block>
+</html>

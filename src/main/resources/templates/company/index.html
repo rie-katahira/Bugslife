@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layout/layout}"
+>
+  <th:block layout:fragment="content">
+    <h1>List Company</h1>
+    <hr />
+    <a class="btn btn-info" th:href="@{/companies/new}">取引先 新規追加</a>
+    <br /><br />
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Zip code</th>
+          <th>Address</th>
+          <th>Phone</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="company : ${listCompany}">
+          <td th:text="${company.name}"></td>
+          <td th:text="${company.email}"></td>
+          <td th:text="${company.zipCode}"></td>
+          <td th:text="${company.address}"></td>
+          <td th:text="${company.phone}"></td>
+          <td>
+            <a
+              class="btn btn-primary"
+              th:href="@{/companies/{id}(id = ${company.id})}"
+              >詳細</a
+            >
+            <a
+              class="btn btn-secondary"
+              th:href="@{/companies/{id}/edit(id = ${company.id})}"
+              >編集</a
+            >
+            <form
+              class="d-inline"
+              th:action="@{/companies/{id}(id = ${company.id})}"
+              th:method="delete"
+            >
+              <button class="btn btn-danger" type="submit">削除</button>
+            </form>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </th:block>
+</html>

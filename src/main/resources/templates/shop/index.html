@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layout/layout}"
+>
+  <th:block layout:fragment="content">
+    <h1>ショップ一覧</h1>
+    <hr />
+    <a th:href="@{/shops/new}">新規作成</a><br /><br />
+
+    <div class="mb-4">
+      <form class="row" th:action="@{/shops}" th:method="'get'">
+        <div class="col-6">
+          <div class="input-group mb-2">
+            <input
+              type="text"
+              id="name"
+              name="name"
+              class="form-control"
+              placeholder="名前"
+              th:value="${name}"
+            />
+            <button type="submit" class="btn btn-primary">検索</button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th>名前</th>
+          <th>アドレス</th>
+          <th>コンタクト</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="shop : ${listShop}">
+          <td th:text="${shop.name}"></td>
+          <td th:text="${shop.address}"></td>
+          <td th:text="${shop.contact}"></td>
+          <td>
+            <a class="btn btn-primary" th:href="@{/shops/{id}(id = ${shop.id})}"
+              >詳細</a
+            >
+            <a
+              class="btn btn-secondary"
+              th:href="@{/shops/{id}/edit(id = ${shop.id})}"
+              >編集</a
+            >
+            <form
+              class="d-inline"
+              th:action="@{/shops/{id}(id = ${shop.id})}"
+              th:method="delete"
+            >
+              <button class="btn btn-danger" type="submit">削除</button>
+            </form>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </th:block>
+</html>

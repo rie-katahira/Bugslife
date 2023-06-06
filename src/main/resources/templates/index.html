@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layout/layout}"
+>
+  <th:block layout:fragment="content">
+    <h1>Endpoints</h1>
+    <hr />
+    <div class="row">
+      <div class="col-sm-8">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Endpoint</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="entry : ${endpoints}" th:if="${entry != '/'}">
+              <td>
+                <a th:href="@{${entry}}"><span th:text="${entry}"></span></a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="col-sm-4" th:if="${urlRecording != null}">
+        <div class="fw-bold">アクセス履歴</div>
+        <div class="list-group">
+          <th:block th:each="entry : ${urlRecording}">
+            <a
+              class="list-group-item list-group-item-action"
+              th:href="@{${entry}}"
+              ><span th:text="${entry}"></span
+            ></a>
+          </th:block>
+        </div>
+      </div>
+    </div>
+  </th:block>
+</html>

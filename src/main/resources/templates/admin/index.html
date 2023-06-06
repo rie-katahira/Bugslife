@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layout/layout}"
+>
+  <th:block layout:fragment="content">
+    <h1>管理者画面
+    </h1>
+    <hr />
+    <div class="row">
+      <form th:method="post" th:action="@{/admin/download}" enctype="multipart/form-data" class="col-md-4">
+          <input type="submit" value="ファイルダウンロード" class="btn btn-warning">
+      </form>
+    </div>
+  </th:block>
+</html>

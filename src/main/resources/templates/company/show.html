@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layout/layout}"
+>
+  <th:block layout:fragment="content">
+    <h1>取引先 詳細</h1>
+    <hr />
+    <div class="form-group">
+      <label for="name">取引先会社名: </label>
+      <span th:text="${company.name}"></span>
+    </div>
+    <div class="form-group">
+      <label for="email">Email: </label>
+      <span th:text="${company.email}"></span>
+    </div>
+    <div class="form-group">
+      <label for="zipCode">郵便番号: </label>
+      <span th:text="${company.zipCode}"></span>
+    </div>
+    <div class="form-group">
+      <label for="address">住所: </label>
+      <span th:text="${company.address}"></span>
+    </div>
+    <div class="form-group">
+      <label for="phone">電話番号: </label>
+      <span th:text="${company.phone}"></span>
+    </div>
+
+    <a
+      class="btn btn-secondary"
+      th:href="@{/companies/{id}/edit(id = ${company.id})}"
+      >編集</a
+    >
+    <br />
+    <form th:action="@{/companies/{id}(id = ${company.id})}" th:method="delete">
+      <button class="btn btn-danger" type="submit">削除</button>
+    </form>
+    <a class="btn btn-default" th:href="@{/companies}">一覧に戻る</a>
+    <br />
+    <br />
+    <br />
+    <h1>取引金額一覧</h1>
+    <hr />
+    <a
+      class="btn btn-info"
+      th:href="@{/transactionAmounts/{c_id}/new(c_id = ${company.id})}"
+      >取引金額 新規追加</a
+    ><br /><br />
+
+    <div class="row">
+      <form th:method="post" th:action="@{/transactionAmounts/{c_id}/upload_csv(c_id = ${company.id})}" enctype="multipart/form-data" class="row col-md-8">
+        <div class="col-md-9">
+          <input type="file" name="csv_file" accept=".csv" class="form-control">
+        </div>
+        <div class="col-md-3">
+          <input type="submit" name="upload_csv" value="ファイルをアップロード" class="btn btn-warning">
+        </div>
+      </form>
+      <form th:method="post" th:action="@{/transactionAmounts/download}" enctype="multipart/form-data" class="col-md-4">
+          <input type="submit" value="テンプレートをダウンロード" class="btn btn-warning">
+      </form>
+    </div>
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th>収入/支出</th>
+          <th>金額</th>
+          <th>期限日</th>
+          <th>対応済</th>
+          <th>メモ</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="tAmount : ${listTAmount}">
+          <td th:text="${tAmount.plusMinus ? '収入' : '支出'}"></td>
+          <td th:text="${tAmount.price}"></td>
+          <td th:text="${#dates.format(tAmount.dueDate, 'yyyy-MM-dd')}"></td>
+          <td
+            th:text="${tAmount.hasPaid ? tAmount.plusMinus ? '入金済' : '支払済' : tAmount.plusMinus ? '未納' : '未払'}"
+          ></td>
+          <td th:text="${tAmount.memo}"></td>
+          <td>
+            <a
+              class="btn btn-primary"
+              th:href="@{/transactionAmounts/{id}(id = ${tAmount.id})}"
+              >詳細</a
+            >
+            <a
+              class="btn btn-secondary"
+              th:href="@{/transactionAmounts/{id}/edit(id = ${tAmount.id})}"
+              >編集</a
+            >
+            <form
+              class="d-inline"
+              th:action="@{/transactionAmounts/{id}(id = ${tAmount.id})}"
+              th:method="delete"
+            >
+              <input type="hidden" th:field="${company.id}" />
+              <button class="btn btn-danger" type="submit">削除</button>
+            </form>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <h4>収支合計 : <span th:text="${tAmountsSum}"></span>千円</h4>
+    <h4>収支比率 : <span th:text="${tAmountsRatio}"></span>%</h4>
+  </th:block>
+</html>

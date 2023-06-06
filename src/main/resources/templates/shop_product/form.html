@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layout/layout}"
+>
+  <th:block layout:fragment="content">
+    <h1 th:if="${productForm.id == null}">商品新規作成</h1>
+    <h1 th:if="${productForm.id != null}">商品編集</h1>
+    <hr />
+    <form
+      th:action="@{/shops/{shopId}/products(shopId = ${shopId})}"
+      th:method="@{${productForm.id == null} ? 'post' : 'put'}"
+      th:object="${productForm}"
+    >
+      <input type="hidden" th:field="*{id}" />
+      <input type="hidden" th:field="${shopId}" />
+
+      <div class="form-group">
+        <label for="name">名前</label>
+        <input
+          id="name"
+          name="name"
+          type="text"
+          class="form-control"
+          th:field="*{name}"
+          th:errorclass="is-invalid"
+        />
+        <div class="invalid-feedback" th:errors="*{name}"></div>
+      </div>
+      <div class="form-group">
+        <label for="code">コード</label>
+        <input
+          id="code"
+          name="code"
+          type="text"
+          class="form-control"
+          th:field="*{code}"
+          th:errorclass="is-invalid"
+        />
+        <div class="invalid-feedback" th:errors="*{code}"></div>
+      </div>
+      <div class="form-group">
+        <label for="category">カテゴリー</label>
+        <div>
+          <div
+            class="form-check form-check-inline"
+            th:each="category: ${categories}"
+          >
+            <input
+              class="form-check-input"
+              type="checkbox"
+              name="categoryIds"
+              th:value="${category.id}"
+              th:id="'category' + ${category.id}"
+              th:field="*{categoryIds}"
+              th:errorclass="is-invalid"
+            />
+            <label
+              class="form-check-label"
+              th:for="'category' + ${category.id}"
+              th:text="${category.name}"
+            ></label>
+          </div>
+          <div class="invalid-feedback" th:errors="*{code}"></div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="weight">重さ</label>
+        <input
+          id="weight"
+          name="weight"
+          type="number"
+          class="form-control"
+          th:field="*{weight}"
+          th:errorclass="is-invalid"
+        />
+        <div class="invalid-feedback" th:errors="*{weight}"></div>
+      </div>
+      <div class="form-group">
+        <label for="height">高さ</label>
+        <input
+          id="height"
+          name="height"
+          type="number"
+          class="form-control"
+          th:field="*{height}"
+          th:errorclass="is-invalid"
+        />
+        <div class="invalid-feedback" th:errors="*{height}"></div>
+      </div>
+      <div class="form-group">
+        <label for="price">値段</label>
+        <input
+          id="price"
+          name="price"
+          type="number"
+          class="form-control"
+          th:field="*{price}"
+          th:errorclass="is-invalid"
+        />
+        <div class="invalid-feedback" th:errors="*{price}"></div>
+      </div>
+      <div class="form-group">
+        <label for="rate">税率</label>
+        <div class="form-check form-check-inline">
+          <input
+            class="form-check-input"
+            type="radio"
+            name="rate"
+            id="rate1"
+            value="10"
+            th:field="*{rate}"
+            th:errorclass="is-invalid"
+          />
+          <label class="form-check-label" for="rate1">通常税率（10%）</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input
+            class="form-check-input"
+            type="radio"
+            name="rate"
+            id="rate2"
+            value="8"
+            th:field="*{rate}"
+            th:errorclass="is-invalid"
+          />
+          <label class="form-check-label" for="rate2">軽減税率（8%）</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input
+            class="form-check-input"
+            type="radio"
+            name="rate"
+            id="rate3"
+            value="0"
+            th:field="*{rate}"
+            th:errorclass="is-invalid"
+          />
+          <label class="form-check-label" for="rate3">非課税（0%）</label>
+        </div>
+        <div class="invalid-feedback" th:errors="*{rate}"></div>
+      </div>
+
+      <div class="form-group">
+        <label for="taxIncluded">入力価格</label>
+        <div class="form-check form-check-inline">
+          <input
+            class="form-check-input"
+            type="radio"
+            name="taxIncluded"
+            id="taxIncluded1"
+            value="true"
+            th:field="*{taxIncluded}"
+            th:errorclass="is-invalid"
+          />
+          <label class="form-check-label" for="taxIncluded1">税込価格</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input
+            class="form-check-input"
+            type="radio"
+            name="taxIncluded"
+            id="taxIncluded2"
+            value="false"
+            th:field="*{taxIncluded}"
+            th:errorclass="is-invalid"
+          />
+          <label class="form-check-label" for="taxIncluded2">税抜き価格</label>
+        </div>
+        <div class="invalid-feedback" th:errors="*{taxIncluded}"></div>
+      </div>
+
+      <div class="form-group">
+        <label for="rounding">端数処理</label>
+        <div class="form-check form-check-inline">
+          <input
+            class="form-check-input"
+            type="radio"
+            name="rounding"
+            id="rounding1"
+            value="floor"
+            th:field="*{rounding}"
+            th:errorclass="is-invalid"
+          />
+          <label class="form-check-label" for="rounding1">切り捨て</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input
+            class="form-check-input"
+            type="radio"
+            name="rounding"
+            id="rounding2"
+            value="round"
+            th:field="*{rounding}"
+            th:errorclass="is-invalid"
+          />
+          <label class="form-check-label" for="rounding2">四捨五入</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input
+            class="form-check-input"
+            type="radio"
+            name="rounding"
+            id="rounding3"
+            value="ceil"
+            th:field="*{rounding}"
+            th:errorclass="is-invalid"
+          />
+          <label class="form-check-label" for="rounding3">切り上げ</label>
+        </div>
+        <div class="invalid-feedback" th:errors="*{rounding}"></div>
+      </div>
+
+      <button type="submit" class="btn btn-success">保存</button>
+      <a
+        th:href="@{/shops/{shopId}/products(shopId = ${shopId})}"
+        class="btn btn-default"
+        >戻る</a
+      >
+    </form>
+  </th:block>
+</html>

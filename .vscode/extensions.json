@@ -1,0 +1,7 @@
+{
+  "recommendations": [
+    "vmware.vscode-boot-dev-pack",
+    "vscjava.vscode-java-pack",
+    "esbenp.prettier-vscode"
+  ]
+}

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layout/layout}"
+>
+  <th:block layout:fragment="content">
+    <h1>カテゴリー詳細</h1>
+    <hr />
+    <div class="form-group">
+      <label for="code">コード: </label>
+      <span th:text="${category.code}"></span>
+    </div>
+    <div class="form-group">
+      <label for="name">名前: </label>
+      <span th:text="${category.name}"></span>
+    </div>
+    <div class="form-group">
+      <label for="description">説明: </label>
+      <span th:text="${category.description}"></span>
+    </div>
+    <div class="form-group">
+      <label for="products">紐付商品一覧: </label>
+      <span th:each="categoryProduct : ${category.categoryProducts}">
+        <span class="badge bg-info text-dark" th:text="${categoryProduct.product.name}" />
+      </span>
+    </div>
+
+
+    <a
+      class="btn btn-primary"
+      th:href="@{/categories/{id}/edit(id = ${category.id})}"
+      >編集</a
+    >
+    <br />
+    <form
+      th:action="@{/categories/{id}(id = ${category.id})}"
+      th:method="delete"
+    >
+      <button class="btn btn-danger" type="submit">削除</button>
+    </form>
+    <a class="btn btn-secondary" th:href="@{/categories}"
+      >カテゴリー一覧</a
+    >
+    <br />
+  </th:block>
+</html>

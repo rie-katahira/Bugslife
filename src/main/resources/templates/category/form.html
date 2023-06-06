@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layout/layout}"
+>
+  <th:block layout:fragment="content">
+    <h1 th:if="${category.id == null}">カテゴリー登録</h1>
+    <h1 th:if="${category.id != null}">カテゴリー編集</h1>
+    <hr />
+    <form
+      id="category-form"
+      th:action="@{/categories}"
+      th:method="@{${category.id == null} ? 'post' : 'put'}"
+      th:object="${category}"
+    >
+      <input type="hidden" th:field="*{id}" />
+
+      <div class="form-group">
+        <label for="code">コード</label>
+        <input
+          id="code"
+          name="code"
+          type="text"
+          class="form-control"
+          th:field="*{code}"
+        />
+      </div>
+      <div class="form-group">
+        <label for="name">名前</label>
+        <input
+          id="name"
+          name="name"
+          type="text"
+          class="form-control"
+          th:field="*{name}"
+        />
+      </div>
+      <div class="form-group">
+        <label for="display_order">表示順</label>
+        <input
+          id="display_order"
+          name="display_order"
+          type="number"
+          class="form-control"
+          th:field="*{displayOrder}"
+        />
+      </div>
+      <div class="form-group">
+        <label>説明</label>
+        <textarea
+          class="form-control"
+        ></textarea>
+      </div>
+
+      <input id="submit" type="submit" class="btn btn-success" value="保存">
+      <a th:href="@{/categories}" class="btn btn-default btn-secondary">戻る</a>
+    </form>
+  </th:block>
+</html>

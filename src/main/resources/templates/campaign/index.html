@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layout/layout}"
+>
+  <th:block layout:fragment="content">
+    <h1>List Campaign</h1>
+    <hr />
+    <a th:href="@{/campaigns/new}">New Campaign</a><br /><br />
+    <div class="row">
+      <form th:method="post" th:action="@{/campaigns/upload_file}" enctype="multipart/form-data" class="row col-md-8">
+        <div class="col-md-9">
+          <input type="file" name="file" accept=".csv" class="form-control">
+        </div>
+        <div class="col-md-3">
+          <input type="submit" name="upload_file" value="ファイルをアップロード" class="btn btn-warning">
+        </div>
+      </form>
+      <form th:method="post" th:action="@{/campaigns/download}" enctype="multipart/form-data" class="col-md-4">
+          <input type="submit" value="テンプレートをダウンロード" class="btn btn-warning">
+      </form>
+    </div>
+    <br />
+    <div class="row">
+      <div class="col-md-3 row">
+        <div class="col-md-3 col-form-label">
+          <label for="status">Status</label>
+        </div>
+        <div class="col-md-9">
+          <select form="form" id="status" name="status"  th:field="*{form.nextStatus}" class="form-select">
+            <option
+            th:each="sts : ${statusList}"
+            th:value="${sts}"
+            th:selected="${status == sts.id}"
+            th:inline="text"
+            >
+              [[${sts.name}]]
+            </option>
+          </select>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <form
+          id="form"
+          class="d-inline"
+          th:action="@{/campaigns/bulkStatusUpdate}"
+          th:method="post"
+          th:object="${form}"
+        >
+          <button class="btn btn-success" type="submit">Bulk Status Update</button>
+        </form>
+      </div>
+    </div>
+    <table class="table">
+      <thead>
+        <tr>
+          <th><input type="checkbox" id="all_check"></th>
+          <th>Name</th>
+          <th>Code</th>
+          <th>DiscountType</th>
+          <th>FromDate</th>
+          <th>ToDate</th>
+          <th>Status</th>
+          <th>Discreption</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="campaign : ${campaignList}">
+          <td>
+            <input
+              form="form"
+              type="checkbox"
+              name="checkedIdList"
+              th:field="*{form.checkedIdList}"
+              th:value="${campaign.id}"
+              class="row_check"
+            >
+          </td>
+          <td th:text="${campaign.name}"></td>
+          <td th:text="${campaign.code}"></td>
+          <td th:text="${campaign.discountType.getName()}"></td>
+          <td th:text="${campaign.fromDate}"></td>
+          <td th:text="${campaign.toDate}"></td>
+          <td th:text="${campaign.status.getName()}"></td>
+          <td th:text="${campaign.description}"></td>
+          <td>
+            <a
+              class="btn btn-primary"
+              th:href="@{/campaigns/{id}(id = ${campaign.id})}"
+              >Show</a
+            >
+            <a
+              class="btn btn-secondary"
+              th:href="@{/campaigns/{id}/edit(id = ${campaign.id})}"
+              >Edit</a
+            >
+            <form
+              class="d-inline"
+              th:action="@{/campaigns/{id}(id = ${campaign.id})}"
+              th:method="delete"
+            >
+              <button class="btn btn-danger" type="submit">Destroy</button>
+            </form>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </th:block>
+</html>
+<script src="/js/campaign.js"></script>

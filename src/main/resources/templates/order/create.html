@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layout/layout}"
+>
+  <th:block layout:fragment="content">
+    <h1 th:if="${order}">受注作成</h1>
+    <hr />
+    <form th:action="@{/orders}" th:method="@{post}" th:object="${order}">
+      <div class="form-group">
+        <label for="customerId">顧客ID</label>
+        <input
+          id="customerId"
+          name="customerId"
+          type="text"
+          class="form-control"
+          th:field="*{customerId}"
+          min="1"
+        />
+      </div>
+      <div class="form-group">
+        <label for="shipping">配送料</label>
+        <input
+          id="shipping"
+          name="shipping"
+          type="number"
+          class="form-control"
+          th:field="*{shipping}"
+          min="0.0"
+        />
+      </div>
+      <div class="form-group">
+        <label for="paymentMethod">お支払い方法</label>
+        <select th:field="*{paymentMethod}" class="form-select">
+          <option
+            th:each="p : ${paymentMethods}"
+            th:value="${p.code}"
+            th:selected="${paymentMethod == p.code}"
+            th:inline="text"
+          >
+            [[${p.name}]]
+          </option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="note">メモ</label>
+        <textarea
+          id="note"
+          name="note"
+          class="form-control"
+          th:field="*{note}"
+        ></textarea>
+      </div>
+      <div class="form-group">
+        <label for="productId">商品ID</label>
+        <select
+          id="productId"
+          type="number"
+          class="form-control"
+          th:field="*{orderProducts[0].productId}"
+        >
+          <option th:each="product : ${products}" th:value="${product.id}">
+            <span th:text="${product.name}"></span>
+          </option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="quantity">個数</label>
+        <input
+          id="quantity"
+          type="number"
+          class="form-control"
+          value="1"
+          min="1"
+          th:field="*{orderProducts[0].quantity}"
+        />
+      </div>
+      <div class="form-group">
+        <label for="discount">商品値引き</label>
+        <input
+          id="discount"
+          type="number"
+          class="form-control"
+          min="0"
+          th:field="*{orderProducts[0].discount}"
+        />
+      </div>
+
+      <button type="submit" class="btn btn-success">作成</button>
+      <a th:href="@{/orders}" class="btn btn-default">戻る</a>
+    </form>
+  </th:block>
+</html>
