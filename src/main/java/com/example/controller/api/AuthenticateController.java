@@ -40,6 +40,10 @@ public class AuthenticateController {
 	@Autowired
 	private UserService userService;
 
+	public AuthenticateController(UserService userService) {
+		this.userService = userService;
+	}
+
 	/**
 	 * requestBodyからemailでUserを検索 Userが存在しない場合はエラー Userが存在する場合はパスワードを比較
 	 * パスワードが一致しない場合はエラー パスワードが一致する場合はJWTを生成して返す
@@ -82,7 +86,8 @@ public class AuthenticateController {
 	private String generateToken(User user) {
 		Algorithm alg = Algorithm.HMAC256(secretKey);
 		String token = JWT.create().withIssuer("HmacJwtProducer").withSubject(user.getName())
-				.withExpiresAt(OffsetDateTime.now().plusMinutes(60).toInstant()).withIssuedAt(OffsetDateTime.now().toInstant())
+				.withExpiresAt(OffsetDateTime.now().plusMinutes(60).toInstant())
+				.withIssuedAt(OffsetDateTime.now().toInstant())
 				.withJWTId(UUID.randomUUID().toString()).withClaim("email", user.getEmail())
 				.withArrayClaim("groups", new String[] { "member", "admin" }).sign(alg);
 		return token;

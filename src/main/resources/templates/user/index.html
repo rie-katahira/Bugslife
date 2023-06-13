@@ -1,73 +1,48 @@
 <!DOCTYPE html>
-<html
-  xmlns:th="http://www.thymeleaf.org"
-  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-  layout:decorate="~{layout/layout}"
->
-  <th:block layout:fragment="content">
-    <h1>ユーザー一覧</h1>
-    <hr />
-    <a th:href="@{/users/new}">新規作成</a><br /><br />
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layout/layout}">
+<th:block layout:fragment="content">
+  <h1>ユーザー一覧</h1>
+  <hr />
+  <a th:href="@{/users/new}">新規作成</a><br /><br />
 
-    <div class="container border py-2 mb-4">
-      <form
-        class="row"
-        th:action="@{/users}"
-        th:method="'get'"
-        th:object="${request}"
-      >
-        <div class="form-group col-6 mb-2">
-          <label for="name">Name:</label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            class="form-control"
-            th:field="*{name}"
-          />
-        </div>
-        <div class="text-end">
-          <input type="reset" value="Reset" class="btn btn-outline-secondary" />
-          <button type="submit" class="btn btn-primary">Search</button>
-        </div>
-      </form>
-    </div>
+  <div class="container border py-2 mb-4">
+    <form class="row" th:action="@{/users}" th:method="'get'" th:object="${request}">
+      <div class="form-group col-6 mb-2">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" class="form-control" th:field="*{name}" />
+      </div>
+      <div class="text-end">
+        <input type="reset" value="Reset" class="btn btn-outline-secondary" />
+        <button type="submit" class="btn btn-primary">Search</button>
+      </div>
+    </form>
+  </div>
 
-    <table class="table">
-      <thead>
-        <tr>
-          <th>名前</th>
-          <th>Eメール</th>
-          <th>パスワード</th>
-          <th>ロール</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr th:each="user : ${listUser}">
-          <td th:text="${user.name}"></td>
-          <td th:text="${user.email}"></td>
-          <td th:text="${user.password}"></td>
-          <td th:text="${user.role}"></td>
-          <td>
-            <a class="btn btn-primary" th:href="@{/users/{id}(id = ${user.id})}"
-              >Show</a
-            >
-            <a
-              class="btn btn-secondary"
-              th:href="@{/users/{id}/edit(id = ${user.id})}"
-              >Edit</a
-            >
-            <form
-              class="d-inline"
-              th:action="@{/users/{id}(id = ${user.id})}"
-              th:method="delete"
-            >
-              <button class="btn btn-danger" type="submit">Destroy</button>
-            </form>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </th:block>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>名前</th>
+        <th>Eメール</th>
+        <th>ロール</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr th:each="user : ${listUser}">
+        <td th:text="${user.name}"></td>
+        <td th:text="${user.email}"></td>
+        <td th:text="${user.role}"></td>
+        <td>
+          <a class="btn btn-primary" th:href="@{/users/{id}(id = ${user.id})}">Show</a>
+          <a class="btn btn-secondary" th:href="@{/users/{id}/edit(id = ${user.id})}">Edit</a>
+          <form class="d-inline" th:action="@{/users/{id}(id = ${user.id})}" th:method="delete">
+            <button class="btn btn-danger" type="submit">Destroy</button>
+          </form>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</th:block>
+
 </html>

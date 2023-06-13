@@ -1,37 +1,29 @@
 <!DOCTYPE html>
-<html
-  xmlns:th="http://www.thymeleaf.org"
-  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-  layout:decorate="~{layout/layout}"
->
-  <th:block layout:fragment="content">
-    <h1>ユーザー詳細</h1>
-    <hr />
-    <div class="form-group">
-      <label for="name">名前: </label>
-      <span th:text="${user.name}"></span>
-    </div>
-    <div class="form-group">
-      <label for="email">Eメール: </label>
-      <span th:text="${user.email}"></span>
-    </div>
-    <div class="form-group">
-      <label for="password">パスワード: </label>
-      <span th:text="${user.password}"></span>
-    </div>
-    <div class="form-group">
-      <label for="password">ロール: </label>
-      <span th:text="${user.role}"></span>
-    </div>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layout/layout}">
+<th:block layout:fragment="content">
+  <h1>ユーザー詳細</h1>
+  <hr />
+  <div class="form-group">
+    <label for="name">名前: </label>
+    <span th:text="${user.name}"></span>
+  </div>
+  <div class="form-group">
+    <label for="email">Eメール: </label>
+    <span th:text="${user.email}"></span>
+  </div>
+  <div class="form-group">
+    <label for="password">ロール: </label>
+    <span th:text="${user.role}"></span>
+  </div>
 
-    <a class="btn btn-link" th:href="@{/users/{id}/edit(id = ${user.id})}"
-      >編集</a
-    >
-    <br />
-    <form th:action="@{/users/{id}(id = ${user.id})}" th:method="delete">
-      <button class="btn btn-link" type="submit">削除</button>
-    </form>
-    <a class="btn btn-link" th:href="@{/users}">一覧へ戻る</a>
-    <br />
-  </th:block>
+  <a class="btn btn-link" th:href="@{/users/{id}/edit(id = ${user.id})}">編集</a>
+  <br />
+  <form th:action="@{/users/{id}(id = ${user.id})}" th:method="delete">
+    <button class="btn btn-link" type="submit">削除</button>
+  </form>
+  <a class="btn btn-link" th:href="@{/users}">一覧へ戻る</a>
+  <br />
+</th:block>
+
 </html>
