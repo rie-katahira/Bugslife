@@ -4,19 +4,25 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.example.repository.UserRepository;
 
 public class CustomInMemoryUserDetailsManager extends InMemoryUserDetailsManager {
 	@Autowired
 	UserRepository repository;
+	private final PasswordEncoder passwordEncoder;
 
 	public CustomInMemoryUserDetailsManager(UserDetails... users) {
 		super(users);
+		this.passwordEncoder = passwordEncoder();
 	}
 
 	/**
@@ -27,14 +33,11 @@ public class CustomInMemoryUserDetailsManager extends InMemoryUserDetailsManager
 		var user = repository.findByEmail(username);
 		if (user.isPresent()) {
 			String password = user.get().getPassword();
-			// passwordの接頭子にハッシュ形式の識別子が付与されているか、`{xxxx}` を正規表現で確認をする.
-			// 付与されていない場合は、平文で登録されていると判断して、{noop}を付与する。
 			Pattern pattern = Pattern.compile("^\\{.+\\}.+");
 			Matcher matcher = pattern.matcher(password);
 			if (!matcher.find()) {
-				password = "{noop}" + password;
+				password = "{noop}" + passwordEncoder.encode(password);
 			}
-
 			UserDetails userDetails = User.builder()
 					.username(user.get().getEmail())
 					.password(password)
@@ -46,4 +49,10 @@ public class CustomInMemoryUserDetailsManager extends InMemoryUserDetailsManager
 		}
 		return super.loadUserByUsername(username);
 	}
+
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+		return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+	}
+
 }
