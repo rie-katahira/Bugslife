@@ -1,8 +1,11 @@
 package com.example.service;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.form.UserSearchForm;
@@ -30,6 +33,8 @@ public class UserService {
 	@Autowired
 	private DeletedUserRepository deletedUserRepository;
 
+	private final PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+
 	public List<User> findAll() {
 		return userRepository.findAll();
 	}
@@ -46,7 +51,9 @@ public class UserService {
 		/**
 		 * パスワードをjavaの暗号化方式を付与する
 		 */
-		entity.setPassword("{noop}" + entity.getPassword());
+		String encodedPassword = passwordEncoder.encode(entity.getPassword());
+		entity.setPassword("{noop}" + encodedPassword);
+		// entity.setPassword(encodedPassword);
 		return userRepository.save(entity);
 	}
 
@@ -92,5 +99,10 @@ public class UserService {
 		Stream<String> userRole = authentication.getAuthorities().stream()
 				.map(GrantedAuthority::getAuthority);
 		return userRole.anyMatch(role -> role.equals("ROLE_ADMIN"));
+	}
+
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+		return PasswordEncoderFactories.createDelegatingPasswordEncoder();
 	}
 }
