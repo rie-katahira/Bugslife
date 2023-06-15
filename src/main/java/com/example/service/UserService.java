@@ -84,7 +84,6 @@ public class UserService {
 			String sql = "SELECT * FROM users WHERE name = :name";
 			if (!isAdmin) {
 				sql += " AND role = :role";
-				System.out.println(sql);
 			}
 			return entityManager.createNativeQuery(sql, User.class)
 					.setParameter("name", form.getName())
