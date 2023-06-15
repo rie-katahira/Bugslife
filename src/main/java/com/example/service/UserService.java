@@ -81,11 +81,13 @@ public class UserService {
 	public List<User> search(UserSearchForm form, boolean isAdmin) {
 		String role = isAdmin ? "ADMIN" : "USER";
 		if (form.getName() != null && form.getName() != "") {
-			String sql = "SELECT * FROM users WHERE name = '" + form.getName() + "'";
+			String sql = "SELECT * FROM users WHERE name = :name";
 			if (!isAdmin) {
-				sql += " AND role = '" + role + "'";
+				sql += " AND role = :role";
 			}
 			return entityManager.createNativeQuery(sql, User.class)
+					.setParameter("name", form.getName())
+					.setParameter("role", role)
 					.getResultList();
 		}
 		if (!isAdmin) {
