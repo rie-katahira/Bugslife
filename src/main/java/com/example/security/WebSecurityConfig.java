@@ -25,6 +25,7 @@ public class WebSecurityConfig {
 				.authorizeHttpRequests((requests) -> requests
 						.requestMatchers("/", "/css/**", "js/**", "/image/**").permitAll()
 						.requestMatchers("/*.ico").permitAll()
+						.requestMatchers("/admin").hasAuthority("ROLE_ADMIN")
 						.anyRequest().authenticated())
 				.formLogin((form) -> form
 						.loginPage("/auth/login")
@@ -63,4 +64,5 @@ public class WebSecurityConfig {
 
 		return new CustomInMemoryUserDetailsManager(user, admin);
 	}
+
 }
