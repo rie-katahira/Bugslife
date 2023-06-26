@@ -1,35 +1,27 @@
 <!DOCTYPE html>
-<html
-  xmlns:th="http://www.thymeleaf.org"
-  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-  layout:decorate="~{layout/layout}"
->
-  <th:block layout:fragment="content">
-    <div class='app-show-container'>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layout/layout}">
+<th:block layout:fragment="content">
+  <div class='app-show-container'>
     <h1>Show App</h1>
     <hr />
     <div class="form-group">
       <label for="name">Name: </label>
-      <span class='font-impact' th:text="${app.name}"></span>
+      <span th:text="${app.name}"></span>
     </div>
     <div class="form-group">
-      <label for="email">Url: </label>
-      <span class='font-impact' th:text="${app.url}"></span>
+      <label for="url">Url: </label>
+      <span th:text="${app.url}"></span>
     </div>
     <div class="form-group">
       <label for="description">Description: </label>
-      <span class='font-impact' th:text="${app.description}"></span>
+      <span th:text="${app.description}"></span>
     </div>
     <div class="form-group">
       <label for="image">Image: </label>
       <!-- 画像があれば表示 -->
-      <img
-        th:if="${app.image != null && app.image != ''}"
-        th:src="${app.image}"
-        th:alt="現在の画像"
-        style="max-width: 200px; max-height: 200px"
-        class="img-filter"
-      />
+      <img th:if="${app.image != null && app.image != ''}" th:src="${app.image}" th:alt="現在の画像"
+        style="max-width: 200px; max-height: 200px" class="img-filter" />
     </div>
     <div class="form-group">
       <label for="developer">Developer: </label>
@@ -40,23 +32,18 @@
       <span th:text="${app.active}"></span>
     </div>
     <div class="form-group">
-      <a class="btn btn-warning" th:href="@{/apps/{id}/edit(id = ${app.id})}"
-      >Edit this record</a
-      >
-      <form
-        class="d-inline"
-        th:action="@{/apps/{id}(id = ${app.id})}"
-        th:method="delete"
-      >
-        <button class="btn btn-info" type="submit">Delete this record</button>
+      <a class="btn btn-primary" th:href="@{/apps/{id}/edit(id = ${app.id})}">Edit this record</a>
+      <form class="d-inline" th:action="@{/apps/{id}(id = ${app.id})}" th:method="delete">
+        <button class="btn btn-danger" type="submit">Delete this record</button>
       </form>
     </div>
     <br />
     <div class="form-group ">
-      <a class="btn btn-light text-right" th:href="@{/apps}">Back to list All apps</a>
+      <a class="btn btn-secondary text-right" th:href="@{/apps}">Back to list All apps</a>
     </div>
     <br />
-    </div>
-    <link th:href="@{/css/app.css}" type="text/css" rel="stylesheet" />
-  </th:block>
+  </div>
+  <link th:href="@{/css/app.css}" type="text/css" rel="stylesheet" />
+</th:block>
+
 </html>
