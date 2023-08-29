@@ -114,16 +114,12 @@ public class CampaignService {
 	@Transactional(readOnly = false, rollbackFor = RuntimeException.class)
 	public void bulkStatusUpdate(List<Long> idList, CampaignStatus nexStatus) throws Exception {
 		try {
-			boolean anyStatusDifferent = idList.stream()
-					.map(id -> campaignRepository.findById(id).get().getStatus().getId())
-					.anyMatch(id -> id == nexStatus.getId());
-
-			if (anyStatusDifferent) {
-				// 少なくとも1つのステータスがnexStatusと異なる場合、例外をスローする
-				throw new RuntimeException("ステータスの変更がないため、ステータスの一括更新に失敗しました。");
-			}
 			idList.forEach(id -> {
 				Campaign campaign = campaignRepository.findById(id).get();
+				// 更新前後のステータスが同じ場合はエラー
+				if (nexStatus.getId() == campaignRepository.findById(id).get().getStatus().getId()) {
+					throw new RuntimeException(campaign.getName() + "にステータスの変更がないため、ステータスの一括更新に失敗しました。");
+				}
 				campaign.setStatus(nexStatus);
 				campaignRepository.save(campaign);
 			});
