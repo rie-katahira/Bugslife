@@ -50,6 +50,10 @@
         <label>説明</label>
         <textarea
           class="form-control"
+          id="description"
+          name="description"
+          th:field="*{description}"
+          maxlength="300"
         ></textarea>
       </div>
 
@@ -58,3 +62,4 @@
     </form>
   </th:block>
 </html>
+<script src="/js/category/category-form.js"></script>
