@@ -74,7 +74,8 @@ public class CategoryController {
 			category = categoryService.save(entity);
 			redirectAttributes.addFlashAttribute("success", Message.MSG_SUCESS_INSERT);
 			redirectAttributes.addAttribute("q", "create");
-			return "redirect:/categories";
+			Long id = category.getId();
+			return "redirect:/categories/" + id + "/productRelation?q=create";
 		} catch (Exception e) {
 			redirectAttributes.addFlashAttribute("error", Message.MSG_ERROR);
 			e.printStackTrace();
