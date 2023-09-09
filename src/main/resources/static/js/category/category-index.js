@@ -1,4 +1,4 @@
-$(document).load(function () {
+$(document).ready(function () {
   var tooltipTriggerList = [].slice.call(
     document.querySelectorAll('[data-bs-toggle="tooltip"]')
   );
