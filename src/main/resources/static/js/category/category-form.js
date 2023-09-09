@@ -26,7 +26,7 @@ $(document).ready(function () {
       // nameのバリデーション
       if (id === "name") {
         let name = $(this).val();
-        if (name === "" || name.length >= 20) {
+        if (name === "" || name.length > 20) {
           $(this).addClass("is-invalid");
           isValid = false;
         } else {
@@ -38,7 +38,7 @@ $(document).ready(function () {
       // desplay_orderのバリデーション
       if (id === "display_order") {
         let displayOrder = $(this).val();
-        if (displayOrder === "" || displayOrder < 0 || displayOrder > 999) {
+        if (displayOrder === "" || displayOrder < 0 || displayOrder > 999 || isNaN(displayOrder)) {
           $(this).addClass("is-invalid");
           isValid = false;
         } else {
@@ -50,7 +50,7 @@ $(document).ready(function () {
   }
 
   function isPatternValid(code) {
-    let pattern = /^([A-Z]{3}[0-9]{3})$/;
+    let pattern = /^[A-Z]{3}-[0-9]{3}$/;
     return pattern.test(code);
   }
 });
