@@ -3,19 +3,25 @@ $(document).ready(function () {
   let action = document.getElementById("action").getAttribute("val");
 
   $.ajax({
-    url: "/api/category/" + categoryId,
+    url: "/api/categories/" + categoryId,
     type: "GET",
     dataType: "json",
   })
     .done(function (data) {
-      var categoryProducts = data;
+      var categoryProducts = data.categoryProducts;
       // チェックボックスにチェックを入れる処理
-      categoryProducts.forEach(function (categoryProduct) {
-        $("#checkbox-" + categoryProduct.productId).prop("checked", true);
-      });
+        categoryProducts.forEach(function (categoryProduct) {
+          $("#checkbox-" + categoryProduct.productId).prop("checked", true);
+        });      
     })
     .fail(function () {
       // APIコールが失敗した場合の処理
+      $("#error-message")
+      .text(
+        "APIコールが失敗しました。"
+      )
+      .show()
+      .fadeOut(3000);
       console.log("APIコールが失敗しました。");
     });
 
@@ -42,7 +48,7 @@ $(document).ready(function () {
       type: "POST",
       dataType: "text",
       contentType: "application/json",
-      data: postData,
+      data: JSON.stringify(postData), // JSON.stringifyを使用してデータをJSON文字列に変換,
     }).done(function (data) {
       $("#success-message").text(data).show().fadeOut(3000);
     });
