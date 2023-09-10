@@ -38,7 +38,6 @@ public class ProductService {
 	@Autowired
 	private CategoryProductRepository categoryProductRepository;
 
-
 	public List<Product> findAll() {
 		return productRepository.findAll();
 	}
@@ -67,14 +66,13 @@ public class ProductService {
 		Join<CategoryProduct, Category> categoryJoin = categoryProductJoin.join("category");
 
 		query.multiselect(
-			root.get("id"),
-			root.get("code"),
-			root.get("name"),
-			root.get("weight"),
-			root.get("height"),
-			root.get("price"),
-			categoryJoin.get("name").alias("categoryName")
-		).where(builder.equal(root.get("shopId"), shopId));
+				root.get("id"),
+				root.get("code"),
+				root.get("name"),
+				root.get("weight"),
+				root.get("height"),
+				root.get("price"),
+				categoryJoin.get("name").alias("categoryName")).where(builder.equal(root.get("shopId"), shopId));
 
 		// formの値を元に検索条件を設定する
 		if (!StringUtils.isEmpty(form.getName())) {
@@ -95,11 +93,19 @@ public class ProductService {
 		// weight で範囲検索
 		if (form.getWeight1() != null && form.getWeight2() != null) {
 			query.where(builder.between(root.get("weight"), form.getWeight1(), form.getWeight2()));
+		} else if (form.getWeight1() != null) {
+			query.where(builder.greaterThanOrEqualTo(root.get("weight"), form.getWeight1()));
+		} else if (form.getWeight2() != null) {
+			query.where(builder.lessThanOrEqualTo(root.get("weight"), form.getWeight2()));
 		}
 
 		// height で範囲検索
 		if (form.getHeight1() != null && form.getHeight2() != null) {
 			query.where(builder.between(root.get("height"), form.getHeight1(), form.getHeight2()));
+		} else if (form.getHeight1() != null) {
+			query.where(builder.greaterThanOrEqualTo(root.get("height"), form.getHeight1()));
+		} else if (form.getHeight2() != null) {
+			query.where(builder.lessThanOrEqualTo(root.get("height"), form.getHeight2()));
 		}
 
 		// price で範囲検索
@@ -116,13 +122,16 @@ public class ProductService {
 
 	/**
 	 * ProductFormの内容を元に商品情報を保存する
+	 * 
 	 * @param entity
 	 * @return
 	 */
 	@Transactional(readOnly = false)
 	public Product save(ProductForm entity) {
 		// 紐づくカテゴリを事前に取得
-		List<CategoryProduct> categoryProducts = entity.getId() != null ? categoryProductRepository.findByProductId(entity.getId()) : new ArrayList<>();
+		List<CategoryProduct> categoryProducts = entity.getId() != null
+				? categoryProductRepository.findByProductId(entity.getId())
+				: new ArrayList<>();
 
 		Product product = new Product(entity);
 		productRepository.save(product);
