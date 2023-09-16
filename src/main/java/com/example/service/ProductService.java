@@ -72,7 +72,9 @@ public class ProductService {
 				root.get("weight"),
 				root.get("height"),
 				root.get("price"),
-				categoryJoin.get("name").alias("categoryName")).where(builder.equal(root.get("shopId"), shopId));
+				categoryJoin.get("name").alias("categoryName"))
+				.distinct(true)
+				.where(builder.equal(root.get("shopId"), shopId));
 
 		// formの値を元に検索条件を設定する
 		if (!StringUtils.isEmpty(form.getName())) {
