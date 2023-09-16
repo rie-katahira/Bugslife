@@ -15,7 +15,6 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Join;
-import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Root;
 
 import com.example.entity.ProductWithCategoryName;
@@ -64,8 +63,8 @@ public class ProductService {
 		final CriteriaQuery<ProductWithCategoryName> query = builder.createQuery(ProductWithCategoryName.class);
 		final Root<Product> root = query.from(Product.class);
 
-		Join<Product, CategoryProduct> categoryProductJoin = root.joinList("categoryProducts", JoinType.LEFT);
-		Join<CategoryProduct, Category> categoryJoin = categoryProductJoin.join("category", JoinType.LEFT);
+		Join<Product, CategoryProduct> categoryProductJoin = root.joinList("categoryProducts");
+		Join<CategoryProduct, Category> categoryJoin = categoryProductJoin.join("category");
 
 		query.multiselect(
 				root.get("id"),
@@ -74,7 +73,7 @@ public class ProductService {
 				root.get("weight"),
 				root.get("height"),
 				root.get("price"),
-				builder.coalesce(categoryJoin.get("name"), "").alias("categoryName"))
+				categoryJoin.get("name").alias("categoryName"))
 				.where(builder.equal(root.get("shopId"), shopId));
 
 		List<Predicate> predicates = new ArrayList<>();
