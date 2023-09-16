@@ -74,6 +74,7 @@ public class ProductService {
 				root.get("height"),
 				root.get("price"),
 				categoryJoin.get("name").alias("categoryName"))
+				.distinct(true)
 				.where(builder.equal(root.get("shopId"), shopId));
 
 		List<Predicate> predicates = new ArrayList<>();
