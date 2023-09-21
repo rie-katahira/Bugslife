@@ -16,6 +16,7 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.JoinType;
+import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 
 import com.example.entity.ProductWithCategoryName;
@@ -74,51 +75,58 @@ public class ProductService {
 				root.get("height"),
 				root.get("price"),
 				builder.coalesce(categoryJoin.get("name"), "").alias("categoryName"))
-				.distinct(true)
 				.where(builder.equal(root.get("shopId"), shopId));
+
+		// 初期条件（shopId）を設定
+		Predicate predicates = builder.equal(root.get("shopId"), shopId);
 
 		// formの値を元に検索条件を設定する
 		if (!StringUtils.isEmpty(form.getName())) {
 			// name で部分一致検索
-			query.where(builder.like(root.get("name"), "%" + form.getName() + "%"));
+			predicates = builder.and(predicates, builder.like(root.get("name"), "%" + form.getName() + "%"));
 		}
 
 		if (!StringUtils.isEmpty(form.getCode())) {
 			// code で部分一致検索
-			query.where(builder.like(root.get("code"), "%" + form.getCode() + "%"));
+			predicates = builder.and(predicates, builder.like(root.get("code"), "%" + form.getCode() + "%"));
 		}
 
 		if (form.getCategories() != null && form.getCategories().size() > 0) {
 			// categories で完全一致検索
-			query.where(categoryJoin.get("id").in(form.getCategories()));
+			predicates = builder.and(predicates, categoryJoin.get("id").in(form.getCategories()));
 		}
 
 		// weight で範囲検索
 		if (form.getWeight1() != null && form.getWeight2() != null) {
-			query.where(builder.between(root.get("weight"), form.getWeight1(), form.getWeight2()));
+			predicates = builder.and(predicates,
+					builder.between(root.get("weight"), form.getWeight1(), form.getWeight2()));
 		} else if (form.getWeight1() != null) {
-			query.where(builder.greaterThanOrEqualTo(root.get("weight"), form.getWeight1()));
+			predicates = builder.and(predicates, builder.greaterThanOrEqualTo(root.get("weight"), form.getWeight1()));
 		} else if (form.getWeight2() != null) {
-			query.where(builder.lessThanOrEqualTo(root.get("weight"), form.getWeight2()));
+			predicates = builder.and(predicates, builder.lessThanOrEqualTo(root.get("weight"), form.getWeight2()));
 		}
 
 		// height で範囲検索
 		if (form.getHeight1() != null && form.getHeight2() != null) {
-			query.where(builder.between(root.get("height"), form.getHeight1(), form.getHeight2()));
+			predicates = builder.and(predicates,
+					builder.between(root.get("height"), form.getHeight1(), form.getHeight2()));
 		} else if (form.getHeight1() != null) {
-			query.where(builder.greaterThanOrEqualTo(root.get("height"), form.getHeight1()));
+			predicates = builder.and(predicates, builder.greaterThanOrEqualTo(root.get("height"), form.getHeight1()));
 		} else if (form.getHeight2() != null) {
-			query.where(builder.lessThanOrEqualTo(root.get("height"), form.getHeight2()));
+			predicates = builder.and(predicates, builder.lessThanOrEqualTo(root.get("height"), form.getHeight2()));
 		}
 
 		// price で範囲検索
 		if (form.getPrice1() != null && form.getPrice2() != null) {
-			query.where(builder.between(root.get("price"), form.getPrice1(), form.getPrice2()));
+			predicates = builder.and(predicates,
+					builder.between(root.get("price"), form.getPrice1(), form.getPrice2()));
 		} else if (form.getPrice1() != null) {
-			query.where(builder.greaterThanOrEqualTo(root.get("price"), form.getPrice1()));
+			predicates = builder.and(predicates, builder.greaterThanOrEqualTo(root.get("price"), form.getPrice1()));
 		} else if (form.getPrice2() != null) {
-			query.where(builder.lessThanOrEqualTo(root.get("price"), form.getPrice2()));
+			predicates = builder.and(predicates, builder.lessThanOrEqualTo(root.get("price"), form.getPrice2()));
 		}
+
+		query.where(predicates);
 
 		return entityManager.createQuery(query).getResultList();
 	}
