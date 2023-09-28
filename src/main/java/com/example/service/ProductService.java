@@ -74,8 +74,9 @@ public class ProductService {
 				root.get("weight"),
 				root.get("height"),
 				root.get("price"),
-				builder.coalesce(categoryJoin.get("name"), "").alias("categoryName"))
-				.where(builder.equal(root.get("shopId"), shopId));
+				builder.coalesce(
+						builder.function("GROUP_CONCAT", String.class, categoryJoin.get("name"), builder.literal(", ")),
+						"Unknown Category").alias("categoryName"));
 
 		// 初期条件（shopId）を設定
 		Predicate predicates = builder.equal(root.get("shopId"), shopId);
