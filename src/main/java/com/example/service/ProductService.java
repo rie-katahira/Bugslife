@@ -18,6 +18,7 @@ import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.Subquery;
 
 import com.example.entity.ProductWithCategoryName;
 import com.example.form.ProductForm;
@@ -76,7 +77,8 @@ public class ProductService {
 				root.get("price"),
 				builder.coalesce(
 						builder.function("GROUP_CONCAT", String.class, categoryJoin.get("name"), builder.literal(", ")),
-						"Unknown Category").alias("categoryName"));
+						"").alias("categoryName"))
+				.groupBy(root.get("id"));
 
 		// 初期条件（shopId）を設定
 		Predicate predicates = builder.equal(root.get("shopId"), shopId);
@@ -93,8 +95,17 @@ public class ProductService {
 		}
 
 		if (form.getCategories() != null && form.getCategories().size() > 0) {
-			// categories で完全一致検索
-			predicates = builder.and(predicates, categoryJoin.get("id").in(form.getCategories()));
+			// 渡されたカテゴリーIDのリストを元にサブクエリを作成
+			List<Predicate> categoryPredicates = new ArrayList<>();
+			for (Long categoryId : form.getCategories()) {
+				Subquery<Long> subquery = query.subquery(Long.class);
+				Root<CategoryProduct> subqueryRoot = subquery.from(CategoryProduct.class);
+				subquery.select(subqueryRoot.get("product").get("id"));
+				subquery.where(subqueryRoot.get("category").get("id").in(categoryId));
+				categoryPredicates.add(builder.in(root.get("id")).value(subquery));
+			}
+			// 作成したサブクエリを元に検索条件をANDで設定
+			predicates = builder.and(predicates, builder.and(categoryPredicates.toArray(new Predicate[0])));
 		}
 
 		// weight で範囲検索
