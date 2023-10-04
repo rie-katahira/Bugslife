@@ -85,7 +85,7 @@ public class TransactionAmountService {
 		}
 		// メモは1000文字以下か
 		if (Objects.nonNull(entity.getMemo())) {
-			if (entity.getMemo().length() >= Validate.TEXT_LENGTH) {
+			if (entity.getMemo().length() > Validate.MEMO_LENGTH) {
 				return false;
 			}
 		}
