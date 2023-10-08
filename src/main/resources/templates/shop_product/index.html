@@ -141,9 +141,11 @@
           <td th:text="${product.code}"></td>
           <td>
             <span
-              class="badge text-bg-info"
-              th:text="${product.categoryName}"
-            ></span>
+              th:each="categoryName : ${#strings.arraySplit(product.categoryName, ',')}"
+              th:if="${not #strings.isEmpty(categoryName)}"
+            >
+              <span class="badge text-bg-info" th:text="${categoryName}"></span>
+            </span>
           </td>
           <td th:text="${product.weight}"></td>
           <td th:text="${product.height}"></td>
