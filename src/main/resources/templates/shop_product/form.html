@@ -94,10 +94,10 @@
         <input
           id="price"
           name="price"
-          type="number"
           class="form-control"
           th:field="*{price}"
           th:errorclass="is-invalid"
+          oninput="validatePrice(this)"
         />
         <div class="invalid-feedback" th:errors="*{price}"></div>
       </div>
@@ -221,3 +221,13 @@
     </form>
   </th:block>
 </html>
+<script>
+  function validatePrice(input) {
+      var value = input.value;
+      if (isNaN(value) || value < 0) {
+          input.setCustomValidity("有効な値を入力してください");
+      } else {
+          input.setCustomValidity("");
+      }
+  }
+</script>
