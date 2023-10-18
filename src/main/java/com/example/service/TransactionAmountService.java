@@ -72,7 +72,7 @@ public class TransactionAmountService {
 			return false;
 		}
 		// 金額が0以上か
-		if (entity.getPrice() <= 0) {
+		if (entity.getPrice() < 0) {
 			return false;
 		}
 		// 金額が10億円以下か
